@@ -3,7 +3,7 @@ require 'grpc_mock/errors'
 
 module GrpcMock
   class GrpcStubAdapter
-    # To make hook point for GRCP::ClientStub
+    # To make hook point for GRPC::ClientStub
     # https://github.com/grpc/grpc/blob/bec3b5ada2c5e5d782dff0b7b5018df646b65cb0/src/ruby/lib/grpc/generic/service.rb#L150-L186
     ADAPTER_CLASS = Class.new(GRPC::ClientStub) do
       alias_method :original_request_response, :request_response
