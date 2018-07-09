@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package hello;
+
+service hello {
+  rpc Hello(HelloRequest) returns (HelloResponse) {}
+
+  rpc HelloServerStream(HelloRequest) returns (stream HelloStreamResponse) {}
+
+  rpc HelloClientStream(stream HelloStreamRequest) returns (HelloResponse) {}
+
+  rpc HelloStream(stream HelloStreamRequest) returns (stream HelloStreamResponse) {}
+}
+
+message HelloRequest {
+  string msg = 1;
+}
+
+message HelloResponse {
+  string msg = 1;
+}
+
+message HelloStreamRequest {
+  string msg = 1;
+}
+
+message HelloStreamResponse {
+  string msg = 1;
+}
