@@ -30,19 +30,19 @@ RSpec.describe 'grpc_mock/rspec' do
     end
 
     context 'when request_response' do
-      it { expect(client.send_message('hello!')).to be_nil }
+      it { expect { client.send_message('hello!') } .to raise_error(GrpcMock::NetConnectNotAllowedError) }
     end
 
     context 'when server_stream' do
-      it { expect(client.send_message('hello!', server_stream: true)).to be_nil }
+      it { expect { client.send_message('hello!', server_stream: true) }.to raise_error(GrpcMock::NetConnectNotAllowedError) }
     end
 
     context 'when client_stream' do
-      it { expect(client.send_message('hello!', client_stream: true)).to be_nil }
+      it { expect { client.send_message('hello!', client_stream: true) }.to raise_error(GrpcMock::NetConnectNotAllowedError) }
     end
 
     context 'when bidi_stream' do
-      it { expect(client.send_message('hello!', client_stream: true, server_stream: true)).to be_nil }
+      it { expect { client.send_message('hello!', client_stream: true, server_stream: true) }.to raise_error(GrpcMock::NetConnectNotAllowedError) }
     end
 
     # should be in disable_net_connect! context

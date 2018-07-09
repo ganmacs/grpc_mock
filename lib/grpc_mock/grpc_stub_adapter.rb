@@ -1,4 +1,5 @@
 require 'grpc'
+require 'grpc_mock/errors'
 
 module GrpcMock
   class GrpcStubAdapter
@@ -17,24 +18,32 @@ module GrpcMock
       def request_response(method, req, marshal, unmarshal, **opt)
         if GrpcMock.config.allow_net_connect
           original_request_response(method, req, marshal, unmarshal, **opt)
+        else
+          raise NetConnectNotAllowedError, method
         end
       end
 
       def client_streamer(method, requests, marshal, unmarshal, **opt)
         if GrpcMock.config.allow_net_connect
           original_client_streamer(method, requests, marshal, unmarshal, **opt)
+        else
+          raise NetConnectNotAllowedError, method
         end
       end
 
       def server_streamer(method, req, marshal, unmarshal, **opt)
         if GrpcMock.config.allow_net_connect
           original_server_streamer(method, req, marshal, unmarshal, **opt)
+        else
+          raise NetConnectNotAllowedError, method
         end
       end
 
       def bidi_streamer(method, requests, marshal, unmarshal, **opt)
         if GrpcMock.config.allow_net_connect
           original_bidi_streamer(method, requests, marshal, unmarshal, **opt)
+        else
+          raise NetConnectNotAllowedError, method
         end
       end
     end
