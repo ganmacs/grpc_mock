@@ -39,7 +39,7 @@ module GrpcMock
       end
     end
 
-    # This class is only use for disabling grpc_stub_adapter hook
+    # This class is only used for disabling grpc_stub_adapter hook
     THROUGHT_CLASS = Module.new do
       def request_response(method, req, marshal, unmarshal, **opt)
         original_request_response(method, req, marshal, unmarshal, **opt)
