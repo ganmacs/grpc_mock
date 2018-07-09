@@ -6,14 +6,13 @@ class HelloClient
   end
 
   def send_message(msg, client_stream: false, server_stream: false)
-    case
-    when client_stream && server_stream
+    if client_stream && server_stream
       m = Hello::HelloStreamRequest.new(msg: msg)
       @client.hello_stream(m)
-    when client_stream
+    elsif client_stream
       m = Hello::HelloStreamRequest.new(msg: msg)
       @client.hello_client_stream(m)
-    when server_stream
+    elsif server_stream
       m = Hello::HelloRequest.new(msg: msg)
       @client.hello_server_stream(m)
     else

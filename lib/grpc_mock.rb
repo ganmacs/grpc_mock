@@ -1,6 +1,6 @@
-require "grpc_mock/version"
-require "grpc_mock/configure"
-require "grpc_mock/adapter"
+require 'grpc_mock/version'
+require 'grpc_mock/configure'
+require 'grpc_mock/adapter'
 
 module GrpcMock
   class << self
