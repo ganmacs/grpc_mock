@@ -8,7 +8,7 @@ module GrpcMock
     ADAPTER_CLASS = Class.new(GRPC::ClientStub) do
       def request_response(method, *args)
         unless GrpcMock::GrpcStubAdapter.enable?
-          return super(method, *args)
+          return super
         end
 
         if GrpcMock.config.allow_net_connect
@@ -20,7 +20,7 @@ module GrpcMock
 
       def client_streamer(method, *args)
         unless GrpcMock::GrpcStubAdapter.enable?
-          return super(method, *args)
+          return super
         end
 
         if GrpcMock.config.allow_net_connect
@@ -32,7 +32,7 @@ module GrpcMock
 
       def server_streamer(method, *args)
         unless GrpcMock::GrpcStubAdapter.enable?
-          return super(method, *args)
+          return super
         end
 
         if GrpcMock.config.allow_net_connect
@@ -44,7 +44,7 @@ module GrpcMock
 
       def bidi_streamer(method, *args)
         unless GrpcMock::GrpcStubAdapter.enable?
-          return super(method, *args)
+          return super
         end
 
         if GrpcMock.config.allow_net_connect
