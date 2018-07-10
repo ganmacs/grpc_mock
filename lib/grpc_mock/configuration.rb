@@ -1,5 +1,5 @@
 module GrpcMock
-  class Configure
+  class Configuration
     attr_accessor :allow_net_connect
 
     def initialize

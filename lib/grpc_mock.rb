@@ -1,5 +1,5 @@
 require 'grpc_mock/version'
-require 'grpc_mock/configure'
+require 'grpc_mock/configuration'
 require 'grpc_mock/adapter'
 
 module GrpcMock
@@ -25,7 +25,7 @@ module GrpcMock
     end
 
     def config
-      @config ||= Configure.new
+      @config ||= Configuration.new
     end
   end
 end
