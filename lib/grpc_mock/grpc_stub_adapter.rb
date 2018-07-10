@@ -5,7 +5,7 @@ module GrpcMock
   class GrpcStubAdapter
     # To make hook point for GRPC::ClientStub
     # https://github.com/grpc/grpc/blob/bec3b5ada2c5e5d782dff0b7b5018df646b65cb0/src/ruby/lib/grpc/generic/service.rb#L150-L186
-    ADAPTER_CLASS = Class.new(GRPC::ClientStub) do
+    class AdapterClass < GRPC::ClientStub
       def request_response(method, *args)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
@@ -55,7 +55,7 @@ module GrpcMock
       end
     end
     GRPC.send(:remove_const, :ClientStub)
-    GRPC.send(:const_set, :ClientStub, ADAPTER_CLASS)
+    GRPC.send(:const_set, :ClientStub, AdapterClass)
 
     def self.disable!
       @enabled = false
