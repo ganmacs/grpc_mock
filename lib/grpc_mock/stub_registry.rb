@@ -4,6 +4,10 @@ module GrpcMock
       @request_stubs = []
     end
 
+    def reset!
+      @request_stubs = []
+    end
+
     # @param stub [GrpcMock::RequestStub]
     def register_request_stub(stub)
       @request_stubs << stub

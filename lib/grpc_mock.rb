@@ -15,6 +15,10 @@ module GrpcMock
       adapter.disable!
     end
 
+    def reset!
+      GrpcMock.stub_registry.reset!
+    end
+
     def disable_net_connect!
       config.allow_net_connect = false
     end
