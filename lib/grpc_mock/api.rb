@@ -1,4 +1,3 @@
-require 'grpc_mock/stub_registry'
 require 'grpc_mock/request_stub'
 
 module GrpcMock

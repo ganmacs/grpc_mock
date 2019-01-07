@@ -2,6 +2,7 @@ require 'grpc_mock/api'
 require 'grpc_mock/version'
 require 'grpc_mock/configuration'
 require 'grpc_mock/adapter'
+require 'grpc_mock/stub_registry'
 
 module GrpcMock
   extend GrpcMock::Api
