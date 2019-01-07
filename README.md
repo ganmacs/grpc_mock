@@ -1,8 +1,6 @@
 # GrpcMock [![Build Status](https://travis-ci.org/ganmacs/grpc_mock.svg?branch=master)](https://travis-ci.org/ganmacs/grpc_mock)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/grpc_mock`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Library for stubbing grpc in Ruby.
 
 ## Installation
 
@@ -22,13 +20,46 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+If you use [RSpec](https://github.com/rspec/rspec), add the following code to spec/spec_helper.rb:
 
-## Development
+```ruby
+require 'grpc_mock/rspec'
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## Examples
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+See definition of protocol buffers and gRPC generated code in [spec/exmaples/hello](https://github.com/ganmacs/grpc_mock/tree/master/spec/examples/hello)
+
+##### Stubbed request based on path and with the default response
+
+```ruby
+GrpcMock.stub_request("/hello.hello/Hello").to_return(Hello::HelloResponse.new(msg: 'test'))
+
+client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
+client = client.hello(Hello::HelloRequest.new(msg: 'hi')) # => Hello::HelloResponse.new(msg: 'test')
+```
+
+##### Stubbing requests based on path and request
+
+```ruby
+GrpcMock.stub_request("/hello.hello/Hello").with(Hello::HelloRequest.new(msg: 'hi')).to_return(Hello::HelloResponse.new(msg: 'test'))
+
+client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
+client = client.hello(Hello::HelloRequest.new(msg: 'hello')) # => send a request to server
+client = client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloResponse.new(msg: 'test') (without any requests to server)
+```
+
+##### Real requests to network can be allowed or disabled
+
+```ruby
+client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
+
+GrpcMock.disable_net_connect!
+client = client.hello(Hello::HelloRequest.new(msg: 'hello')) # => Raise NetConnectNotAllowedError error
+
+GrpcMock.allow_net_connect!
+client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure) # => send a request to server
+```
 
 ## Contributing
 
