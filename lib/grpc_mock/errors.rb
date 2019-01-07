@@ -7,7 +7,7 @@ module GrpcMock
 
   class NoResponseError < StandardError
     def initialize(msg)
-      super("There is no response error: #{msg}")
+      super("There is no response: #{msg}")
     end
   end
 end

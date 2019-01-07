@@ -1,5 +1,4 @@
 require 'grpc'
-
 require 'grpc_mock/errors'
 
 module GrpcMock
@@ -22,12 +21,13 @@ module GrpcMock
         end
       end
 
+      # TODO
       def client_streamer(method, requests, *args)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
 
-        r = requests.to_a        # XXX
+        r = requests.to_a       # FIXME: this may not work
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
           mock
@@ -58,7 +58,7 @@ module GrpcMock
           return super
         end
 
-        r = requests.to_a        # XXX
+        r = requests.to_a       # FIXME: this may not work
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
           mock
@@ -91,27 +91,5 @@ module GrpcMock
     def disable!
       GrpcMock::GrpcStubAdapter.disable!
     end
-
-    # class Streamer
-    #   include Enumerable
-
-    #   # @param path [String]
-    #   # @param requests [Enumerable]
-    #   def initialize(path, requests)
-    #     @path = path
-    #     @requests = requests
-    #   end
-
-    #   def each
-    #     @requests.each do |req|
-    #       mock = GrpcMock.stub_registry.response_for_request(@path, req)
-    #       if mock
-    #         mock
-    #       else
-    #         req
-    #       end
-    #     end
-    #   end
-    # end
   end
 end

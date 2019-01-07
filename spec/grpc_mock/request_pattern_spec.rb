@@ -42,7 +42,7 @@ RSpec.describe GrpcMock::RequestPattern do
         end
       end
 
-      context 'with block request false' do
+      context 'with block returning false' do
         it 'reutrns false' do
           request_pattern.with(request) { |_| false }
           expect(request_pattern.match?(path, request)).to eq(false)
