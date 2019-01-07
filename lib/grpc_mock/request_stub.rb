@@ -1,3 +1,4 @@
+require 'grpc_mock/request_pattern'
 require 'grpc_mock/resopnse_sequence'
 require 'grpc_mock/errors'
 
@@ -5,8 +6,13 @@ module GrpcMock
   class RequestStub
     # @param path [String] gRPC path like /${service_name}/${method_name}
     def initialize(path)
-      @path = path
+      @request_pattern = RequestPattern.new(path)
       @response_sequence = []
+    end
+
+    def with(request = nil, &block)
+      @request_pattern.with(request, &block)
+      self
     end
 
     def to_return(*resp)
@@ -28,9 +34,11 @@ module GrpcMock
       end
     end
 
-    # only support exact match
-    def response_for(path)
-      @path == path
+    # @param path [String]
+    # @param request [Object]
+    # @return [Bool]
+    def match?(path, request)
+      @request_pattern.match?(path, request)
     end
   end
 end

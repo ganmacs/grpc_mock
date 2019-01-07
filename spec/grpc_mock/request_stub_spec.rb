@@ -60,7 +60,7 @@ RSpec.describe GrpcMock::RequestStub do
     end
   end
 
-  describe '#resopnse_for' do
-    it { expect(stub_request.response_for(path)).to eq(true) }
+  describe '#match?' do
+    it { expect(stub_request.match?(path, double(:request))).to eq(true) }
   end
 end

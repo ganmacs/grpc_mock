@@ -14,9 +14,11 @@ module GrpcMock
       stub
     end
 
-    def response_for_request(path)
+    # @param path [String]
+    # @param request [Object]
+    def response_for_request(path, request)
       rstub = @request_stubs.find do |stub|
-        stub.response_for(path)
+        stub.match?(path, request)
       end
 
       if rstub
