@@ -8,4 +8,8 @@ RSpec.configure do |config|
   config.after(:suite) do
     GrpcMock.disable!
   end
+
+  config.after(:each) do
+    GrpcMock.reset!
+  end
 end

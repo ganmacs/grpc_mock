@@ -8,10 +8,10 @@ class HelloClient
   def send_message(msg, client_stream: false, server_stream: false)
     if client_stream && server_stream
       m = Hello::HelloStreamRequest.new(msg: msg)
-      @client.hello_stream(m)
+      @client.hello_stream([m].to_enum)
     elsif client_stream
       m = Hello::HelloStreamRequest.new(msg: msg)
-      @client.hello_client_stream(m)
+      @client.hello_client_stream([m].to_enum)
     elsif server_stream
       m = Hello::HelloRequest.new(msg: msg)
       @client.hello_server_stream(m)

@@ -6,48 +6,63 @@ module GrpcMock
     # To make hook point for GRPC::ClientStub
     # https://github.com/grpc/grpc/blob/bec3b5ada2c5e5d782dff0b7b5018df646b65cb0/src/ruby/lib/grpc/generic/service.rb#L150-L186
     class AdapterClass < GRPC::ClientStub
-      def request_response(method, *args)
+      def request_response(method, request, *args)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
 
-        if GrpcMock.config.allow_net_connect
+        mock = GrpcMock.stub_registry.response_for_request(method, request)
+        if mock
+          mock
+        elsif GrpcMock.config.allow_net_connect
           super
         else
           raise NetConnectNotAllowedError, method
         end
       end
 
-      def client_streamer(method, *args)
+      # TODO
+      def client_streamer(method, requests, *args)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
 
-        if GrpcMock.config.allow_net_connect
+        r = requests.to_a       # FIXME: this may not work
+        mock = GrpcMock.stub_registry.response_for_request(method, r)
+        if mock
+          mock
+        elsif GrpcMock.config.allow_net_connect
           super
         else
           raise NetConnectNotAllowedError, method
         end
       end
 
-      def server_streamer(method, *args)
+      def server_streamer(method, request, *args)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
 
-        if GrpcMock.config.allow_net_connect
+        mock = GrpcMock.stub_registry.response_for_request(method, request)
+        if mock
+          mock
+        elsif GrpcMock.config.allow_net_connect
           super
         else
           raise NetConnectNotAllowedError, method
         end
       end
 
-      def bidi_streamer(method, *args)
+      def bidi_streamer(method, requests, *args)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
 
-        if GrpcMock.config.allow_net_connect
+        r = requests.to_a       # FIXME: this may not work
+        mock = GrpcMock.stub_registry.response_for_request(method, r)
+        if mock
+          mock
+        elsif GrpcMock.config.allow_net_connect
           super
         else
           raise NetConnectNotAllowedError, method

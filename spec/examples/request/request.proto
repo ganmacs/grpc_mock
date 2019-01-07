@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package request;
+
+service request {
+  rpc Hello(HelloRequest) returns (HelloResponse) {}
+
+  rpc HelloServerStream(HelloRequest) returns (stream HelloStreamResponse) {}
+
+  rpc HelloClientStream(stream HelloStreamRequest) returns (HelloResponse) {}
+
+  rpc HelloStream(stream HelloStreamRequest) returns (stream HelloStreamResponse) {}
+}
+
+enum PhoneType {
+  MOBILE = 0;
+  HOME = 1;
+  WORK = 2;
+}
+
+message HelloRequest {
+  string msg = 1;
+  InnerRequest inner = 2;
+  int64 n = 3;
+  PhoneType ptype = 4;
+}
+
+message InnerRequest {
+  string msg = 1;
+  int64 n = 2;
+  PhoneType ptype = 3;
+}
+
+message HelloResponse {
+  string msg = 1;
+}
+
+message HelloStreamRequest {
+  string msg = 1;
+}
+
+message HelloStreamResponse {
+  string msg = 1;
+}

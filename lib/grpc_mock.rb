@@ -1,8 +1,12 @@
+require 'grpc_mock/api'
 require 'grpc_mock/version'
 require 'grpc_mock/configuration'
 require 'grpc_mock/adapter'
+require 'grpc_mock/stub_registry'
 
 module GrpcMock
+  extend GrpcMock::Api
+
   class << self
     def enable!
       adapter.enable!
@@ -12,12 +16,12 @@ module GrpcMock
       adapter.disable!
     end
 
-    def disable_net_connect!
-      config.allow_net_connect = false
+    def reset!
+      GrpcMock.stub_registry.reset!
     end
 
-    def allow_net_connect!
-      config.allow_net_connect = true
+    def stub_registry
+      @stub_registry ||= GrpcMock::StubRegistry.new
     end
 
     def adapter
