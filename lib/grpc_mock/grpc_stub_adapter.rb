@@ -1,4 +1,5 @@
 require 'grpc'
+
 require 'grpc_mock/errors'
 
 module GrpcMock
@@ -11,7 +12,10 @@ module GrpcMock
           return super
         end
 
-        if GrpcMock.config.allow_net_connect
+        mock = GrpcMock.stub_registry.response_for_request(method)
+        if mock
+          mock
+        elsif GrpcMock.config.allow_net_connect
           super
         else
           raise NetConnectNotAllowedError, method
