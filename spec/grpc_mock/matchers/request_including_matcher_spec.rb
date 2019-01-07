@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grpc_mock/matchers/request_including_matcher'
 
 RSpec.describe GrpcMock::Matchers::RequestIncludingMatcher do

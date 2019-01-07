@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grpc_mock/api'
 require 'grpc_mock/version'
 require 'grpc_mock/configuration'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GrpcMock::RequestStub do
   let(:stub_request) do
     described_class.new(path)

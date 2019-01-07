@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GrpcMock
   class StubRegistry
     def initialize

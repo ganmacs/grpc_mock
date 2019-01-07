@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grpc_mock/matchers/hash_argument_matcher'
 
 module GrpcMock

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grpc_mock/request_stub'
 require 'grpc_mock/matchers/request_including_matcher'
 

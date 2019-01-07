@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GrpcMock::RequestPattern do
   let(:request_pattern) do
     described_class.new(path)

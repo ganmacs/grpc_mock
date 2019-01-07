@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grpc_mock'
 
 RSpec.configure do |config|

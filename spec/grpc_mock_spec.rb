@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'examples/hello/hello_client'
 require 'examples/request/request_services_pb'
 
@@ -119,7 +121,7 @@ RSpec.describe GrpcMock do
             msg: 'hello!',
             n: 11,
             ptype: Request::PhoneType::WORK,
-          )
+          ),
         )
       end
 
@@ -129,7 +131,7 @@ RSpec.describe GrpcMock do
       end
 
       it 'returns mock object' do
-        h = { msg: 'hello2!', ptype: Request::PhoneType.lookup(Request::PhoneType::MOBILE), inner: { msg: 'hello!'} }
+        h = { msg: 'hello2!', ptype: Request::PhoneType.lookup(Request::PhoneType::MOBILE), inner: { msg: 'hello!' } }
         GrpcMock.stub_request('/request.request/Hello').with(GrpcMock.request_including(h)).to_return(response)
         expect(client.hello(request)).to eq(response)
       end

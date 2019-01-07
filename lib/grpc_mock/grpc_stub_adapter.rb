@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grpc'
 require 'grpc_mock/errors'
 

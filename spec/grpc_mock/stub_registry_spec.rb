@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GrpcMock::StubRegistry do
   let(:registry) do
     described_class.new

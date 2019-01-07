@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grpc_mock/grpc_stub_adapter'
 
 module GrpcMock
