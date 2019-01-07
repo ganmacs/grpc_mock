@@ -62,6 +62,20 @@ RSpec.describe GrpcMock do
       end
 
       it { expect(client.send_message('hello2!')).to eq(response) }
+
+      context 'and they are two mocking request' do
+        let(:response2) do
+          Hello::HelloResponse.new(msg: 'test')
+        end
+
+        before do
+          GrpcMock.stub_request('/hello.hello/Hello').with(Hello::HelloRequest.new(msg: 'hello2!')).to_return(response2)
+        end
+
+        it 'returns newest result' do
+          expect(client.send_message('hello2!')).to eq(response2)
+        end
+      end
     end
 
     context 'with not equal request' do

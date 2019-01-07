@@ -10,7 +10,7 @@ module GrpcMock
 
     # @param stub [GrpcMock::RequestStub]
     def register_request_stub(stub)
-      @request_stubs << stub
+      @request_stubs.unshift(stub)
       stub
     end
 
