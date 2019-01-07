@@ -5,7 +5,7 @@ require 'grpc_mock/version'
 Gem::Specification.new do |spec|
   spec.name          = 'grpc_mock'
   spec.version       = GrpcMock::VERSION
-  spec.authors       = ['ganmacs']
+  spec.authors       = ['Yuta Iwama']
   spec.email         = ['ganmacs@gmail.com']
 
   spec.summary       = 'Library for stubbing grpc in Ruby'
