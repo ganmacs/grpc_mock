@@ -19,14 +19,6 @@ module GrpcMock
       GrpcMock.stub_registry.reset!
     end
 
-    def disable_net_connect!
-      config.allow_net_connect = false
-    end
-
-    def allow_net_connect!
-      config.allow_net_connect = true
-    end
-
     def stub_registry
       @stub_registry ||= GrpcMock::StubRegistry.new
     end
