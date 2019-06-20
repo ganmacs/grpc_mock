@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'grpc_mock/request_pattern'
+require 'grpc_mock/response'
 require 'grpc_mock/response_sequence'
 require 'grpc_mock/errors'
 
@@ -17,8 +18,15 @@ module GrpcMock
       self
     end
 
-    def to_return(*resp)
-      @response_sequence << GrpcMock::ResponsesSequence.new(resp)
+    def to_return(*values)
+      responses = [*values].flatten.map { |v| Response::Value.new(v) }
+      @response_sequence << GrpcMock::ResponsesSequence.new(responses)
+      self
+    end
+
+    def to_raise(*exceptions)
+      responses = [*exceptions].flatten.map { |e| Response::ExceptionValue.new(e) }
+      @response_sequence << GrpcMock::ResponsesSequence.new(responses)
       self
     end
 
