@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'grpc_mock/request_pattern'
-require 'grpc_mock/resopnse_sequence'
+require 'grpc_mock/response_sequence'
 require 'grpc_mock/errors'
 
 module GrpcMock
