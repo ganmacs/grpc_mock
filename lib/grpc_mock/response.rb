@@ -2,8 +2,6 @@
 
 module GrpcMock
   module Response
-    class InvalidArgument < StandardError; end
-
     class ExceptionValue
       def initialize(exception)
         @exception = case exception
@@ -14,7 +12,7 @@ module GrpcMock
                      when Exception
                        exception
                      else
-                       raise InvalidArgument.new(message: "Invalid exception class: #{exception.class}")
+                       raise ArgumentError.new(message: "Invalid exception class: #{exception.class}")
                      end
       end
 

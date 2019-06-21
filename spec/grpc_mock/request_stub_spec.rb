@@ -95,8 +95,8 @@ RSpec.describe GrpcMock::RequestStub do
 
     context 'with invalid value (integer)' do
       let(:response) { 1 }
-      it 'registers exception' do
-        expect { stub_request.to_raise(response) }.to raise_error(GrpcMock::Response::InvalidArgument)
+      it 'raises ArgumentError' do
+        expect { stub_request.to_raise(response) }.to raise_error(ArgumentError)
       end
     end
 
