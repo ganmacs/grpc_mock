@@ -24,7 +24,7 @@ module GrpcMock
       end
 
       if rstub
-        rstub.response.dup
+        rstub.response
       end
     end
   end

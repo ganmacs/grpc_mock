@@ -42,16 +42,27 @@ RSpec.describe GrpcMock do
   end
 
   describe '.stub_request' do
-    let(:response) do
-      Hello::HelloResponse.new(msg: 'test')
+    context 'with to_return' do
+      let(:response) { Hello::HelloResponse.new(msg: 'test') }
+
+      before do
+        described_class.enable!
+        GrpcMock.stub_request('/hello.hello/Hello').to_return(response)
+      end
+
+      it { expect(client.send_message('hello!')).to eq(response) }
     end
 
-    before do
-      described_class.enable!
-      GrpcMock.stub_request('/hello.hello/Hello').to_return(response)
-    end
+    context 'with to_raise' do
+      let(:exception) { StandardError.new('message') }
 
-    it { expect(client.send_message('hello!')).to eq(response) }
+      before do
+        described_class.enable!
+        GrpcMock.stub_request('/hello.hello/Hello').to_raise(exception)
+      end
+
+      it { expect { client.send_message('hello!') }.to raise_error(exception.class) }
+    end
   end
 
   describe '.with' do
