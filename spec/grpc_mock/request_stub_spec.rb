@@ -55,16 +55,16 @@ RSpec.describe GrpcMock::RequestStub do
   end
 
   describe '#to_return' do
+    let(:response) { double(:response) }
+
     it 'registers response' do
-      request = double(:request)
-      expect(GrpcMock::ResponsesSequence).to receive(:new).with([anything]).once
-      expect(stub_request.to_return(request)).to eq(stub_request)
+      expect(GrpcMock::ResponsesSequence).to receive(:new).with([GrpcMock::Response::Value]).once
+      expect(stub_request.to_return(response)).to eq(stub_request)
     end
 
     it 'registers multi responses' do
-      request = double(:request)
-      expect(GrpcMock::ResponsesSequence).to receive(:new).with([anything, anything]).once
-      expect(stub_request.to_return(request, request)).to eq(stub_request)
+      expect(GrpcMock::ResponsesSequence).to receive(:new).with([GrpcMock::Response::Value, GrpcMock::Response::Value]).once
+      expect(stub_request.to_return(response, response)).to eq(stub_request)
     end
   end
 
@@ -72,7 +72,7 @@ RSpec.describe GrpcMock::RequestStub do
     context 'with string' do
       let(:exception) { 'string' }
       it 'registers exception' do
-        expect(GrpcMock::ResponsesSequence).to receive(:new).with([anything]).once
+        expect(GrpcMock::ResponsesSequence).to receive(:new).with([GrpcMock::Response::ExceptionValue]).once
         expect(stub_request.to_raise(exception)).to eq(stub_request)
       end
     end
@@ -80,7 +80,7 @@ RSpec.describe GrpcMock::RequestStub do
     context 'with class' do
       let(:response) { StandardError }
       it 'registers exception' do
-        expect(GrpcMock::ResponsesSequence).to receive(:new).with([anything]).once
+        expect(GrpcMock::ResponsesSequence).to receive(:new).with([GrpcMock::Response::ExceptionValue]).once
         expect(stub_request.to_raise(response)).to eq(stub_request)
       end
     end
@@ -88,7 +88,7 @@ RSpec.describe GrpcMock::RequestStub do
     context 'with exception instance' do
       let(:response) { StandardError.new('message') }
       it 'registers exception' do
-        expect(GrpcMock::ResponsesSequence).to receive(:new).with([anything]).once
+        expect(GrpcMock::ResponsesSequence).to receive(:new).with([GrpcMock::Response::ExceptionValue]).once
         expect(stub_request.to_raise(response)).to eq(stub_request)
       end
     end
@@ -100,10 +100,12 @@ RSpec.describe GrpcMock::RequestStub do
       end
     end
 
-    it 'registers multi exception' do
-      exception = StandardError.new('message')
-      expect(GrpcMock::ResponsesSequence).to receive(:new).with([anything, anything]).once
-      expect(stub_request.to_raise(exception, exception)).to eq(stub_request)
+    context 'with multi exceptions' do
+      let(:exception) { StandardError.new('message') }
+      it 'registers exceptions' do
+        expect(GrpcMock::ResponsesSequence).to receive(:new).with([GrpcMock::Response::ExceptionValue, GrpcMock::Response::ExceptionValue]).once
+        expect(stub_request.to_raise(exception, exception)).to eq(stub_request)
+      end
     end
   end
 
