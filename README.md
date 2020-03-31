@@ -61,6 +61,29 @@ GrpcMock.allow_net_connect!
 Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure) # => send a request to server
 ```
 
+##### Raising errors
+
+**Exception declared by class**
+
+```ruby
+GrpcMock.stub_request("/hello.hello/Hello").to_raise(StandardError)
+
+client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
+client.hello(Hello::HelloRequest.new(msg: 'hi')) # => Raise StandardError
+```
+
+**or by exception instance**
+
+```ruby
+GrpcMock.stub_request("/hello.hello/Hello").to_raise(StandardError.new("Some error"))
+```
+
+**or by string**
+
+```ruby
+GrpcMock.stub_request("/hello.hello/Hello").to_raise("Some error")
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ganmacs/grpc_mock. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
