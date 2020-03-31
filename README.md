@@ -30,7 +30,7 @@ require 'grpc_mock/rspec'
 
 See definition of protocol buffers and gRPC generated code in [spec/exmaples/hello](https://github.com/ganmacs/grpc_mock/tree/master/spec/examples/hello)
 
-##### Stubbed request based on path and with the default response
+### Stubbed request based on path and with the default response
 
 ```ruby
 GrpcMock.stub_request("/hello.hello/Hello").to_return(Hello::HelloResponse.new(msg: 'test'))
@@ -39,7 +39,7 @@ client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
 client.hello(Hello::HelloRequest.new(msg: 'hi')) # => Hello::HelloResponse.new(msg: 'test')
 ```
 
-##### Stubbing requests based on path and request
+### Stubbing requests based on path and request
 
 ```ruby
 GrpcMock.stub_request("/hello.hello/Hello").with(Hello::HelloRequest.new(msg: 'hi')).to_return(Hello::HelloResponse.new(msg: 'test'))
@@ -49,7 +49,7 @@ client.hello(Hello::HelloRequest.new(msg: 'hello')) # => send a request to serve
 client client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloResponse.new(msg: 'test') (without any requests to server)
 ```
 
-##### Real requests to network can be allowed or disabled
+### Real requests to network can be allowed or disabled
 
 ```ruby
 client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
@@ -61,7 +61,7 @@ GrpcMock.allow_net_connect!
 Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure) # => send a request to server
 ```
 
-##### Raising errors
+### Raising errors
 
 **Exception declared by class**
 
