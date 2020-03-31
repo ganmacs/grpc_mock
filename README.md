@@ -36,7 +36,7 @@ See definition of protocol buffers and gRPC generated code in [spec/exmaples/hel
 GrpcMock.stub_request("/hello.hello/Hello").to_return(Hello::HelloResponse.new(msg: 'test'))
 
 client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
-client = client.hello(Hello::HelloRequest.new(msg: 'hi')) # => Hello::HelloResponse.new(msg: 'test')
+client.hello(Hello::HelloRequest.new(msg: 'hi')) # => Hello::HelloResponse.new(msg: 'test')
 ```
 
 ##### Stubbing requests based on path and request
@@ -45,8 +45,8 @@ client = client.hello(Hello::HelloRequest.new(msg: 'hi')) # => Hello::HelloRespo
 GrpcMock.stub_request("/hello.hello/Hello").with(Hello::HelloRequest.new(msg: 'hi')).to_return(Hello::HelloResponse.new(msg: 'test'))
 
 client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
-client = client.hello(Hello::HelloRequest.new(msg: 'hello')) # => send a request to server
-client = client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloResponse.new(msg: 'test') (without any requests to server)
+client.hello(Hello::HelloRequest.new(msg: 'hello')) # => send a request to server
+client client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloResponse.new(msg: 'test') (without any requests to server)
 ```
 
 ##### Real requests to network can be allowed or disabled
@@ -55,10 +55,10 @@ client = client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloRe
 client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
 
 GrpcMock.disable_net_connect!
-client = client.hello(Hello::HelloRequest.new(msg: 'hello')) # => Raise NetConnectNotAllowedError error
+client.hello(Hello::HelloRequest.new(msg: 'hello')) # => Raise NetConnectNotAllowedError error
 
 GrpcMock.allow_net_connect!
-client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure) # => send a request to server
+Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure) # => send a request to server
 ```
 
 ## Contributing
