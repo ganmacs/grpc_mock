@@ -8,16 +8,20 @@ module GrpcMock
     # To make hook point for GRPC::ClientStub
     # https://github.com/grpc/grpc/blob/bec3b5ada2c5e5d782dff0b7b5018df646b65cb0/src/ruby/lib/grpc/generic/service.rb#L150-L186
     class AdapterClass < GRPC::ClientStub
-      def request_response(method, request, *args)
+      def request_response(method, request, *args, **opts)
         unless GrpcMock::GrpcStubAdapter.enabled?
-          return super
+          return super(*args, **opts)
         end
 
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
-          mock.evaluate
+          if opts[:return_op]
+            OperationStub.new(mock.evaluate)
+          else
+            mock.evaluate
+          end
         elsif GrpcMock.config.allow_net_connect
-          super
+          super(*args, **opts)
         else
           raise NetConnectNotAllowedError, method
         end
