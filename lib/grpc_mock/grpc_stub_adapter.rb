@@ -2,6 +2,7 @@
 
 require 'grpc'
 require 'grpc_mock/errors'
+require 'grpc_mock/operation_stub'
 
 module GrpcMock
   class GrpcStubAdapter
@@ -16,7 +17,8 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
           if opts[:return_op]
-            OperationStub.new(mock.evaluate)
+            OperationStub.new response: mock.evaluate,
+                              metadata: opts[:metadata]
           else
             mock.evaluate
           end
