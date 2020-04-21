@@ -11,11 +11,12 @@ module GrpcMock
     class AdapterClass < GRPC::ClientStub
       def request_response(method, request, *args, **opts)
         unless GrpcMock::GrpcStubAdapter.enabled?
-          return super(*args, **opts)
+          return super
         end
 
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
+          # TODO: support returning operation in error case too
           if opts[:return_op]
             OperationStub.new response: mock.evaluate,
                               metadata: opts[:metadata]
@@ -23,7 +24,7 @@ module GrpcMock
             mock.evaluate
           end
         elsif GrpcMock.config.allow_net_connect
-          super(*args, **opts)
+          super
         else
           raise NetConnectNotAllowedError, method
         end
