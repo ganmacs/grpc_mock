@@ -51,6 +51,15 @@ RSpec.describe GrpcMock do
       end
 
       it { expect(client.send_message('hello!')).to eq(response) }
+
+      context 'when return_op is true' do
+        let(:client_call) { client.send_message('hello!', return_op: true) }
+
+        it 'returns an executable operation' do
+          expect(client_call).to be_a GrpcMock::OperationStub
+          expect(client_call.execute).to eq response
+        end
+      end
     end
 
     context 'with to_raise' do
