@@ -6,8 +6,6 @@ require 'grpc_mock/operation_stub'
 
 module GrpcMock
   class GrpcStubAdapter
-    # To make hook point for GRPC::ClientStub
-    # https://github.com/grpc/grpc/blob/bec3b5ada2c5e5d782dff0b7b5018df646b65cb0/src/ruby/lib/grpc/generic/service.rb#L150-L186
     module MockStub
       def request_response(method, request, *args, **opts)
         unless GrpcMock::GrpcStubAdapter.enabled?
@@ -78,7 +76,6 @@ module GrpcMock
         end
       end
     end
-    GRPC::ClientStub.prepend MockStub
 
     def self.disable!
       @enabled = false

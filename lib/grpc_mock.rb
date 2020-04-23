@@ -34,4 +34,8 @@ module GrpcMock
       @config ||= Configuration.new
     end
   end
+
+  # Hook into GRPC::ClientStub
+  # https://github.com/grpc/grpc/blob/bec3b5ada2c5e5d782dff0b7b5018df646b65cb0/src/ruby/lib/grpc/generic/service.rb#L150-L186
+  GRPC::ClientStub.prepend GrpcStubAdapter::MockStub
 end
