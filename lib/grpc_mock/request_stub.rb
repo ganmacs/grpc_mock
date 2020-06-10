@@ -18,8 +18,9 @@ module GrpcMock
       self
     end
 
-    def to_return(*values)
+    def to_return(*values, &block)
       responses = [*values].flatten.map { |v| Response::Value.new(v) }
+      responses << Response::BlockValue.new(block) if block
       @response_sequence << GrpcMock::ResponsesSequence.new(responses)
       self
     end

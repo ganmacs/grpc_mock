@@ -11,40 +11,57 @@ RSpec.describe GrpcMock::RequestStub do
 
   describe '#response' do
     let(:exception) { StandardError.new }
+    let(:request1) { :request_1 }
+    let(:request2) { :request_2 }
     let(:value1) { :response_1 }
     let(:value2) { :response_2 }
     let(:value3) { :response_3 }
 
     it 'returns response' do
       stub_request.to_return(value1)
-      expect(stub_request.response.evaluate).to eq(value1)
+      expect(stub_request.response.evaluate(request1)).to eq(value1)
     end
 
     it 'raises exception' do
       stub_request.to_raise(exception)
-      expect { stub_request.response.evaluate }.to raise_error(StandardError)
+      expect { stub_request.response.evaluate(request1) }.to raise_error(StandardError)
     end
 
     it 'returns responses in a sequence passed as array' do
       stub_request.to_return(value1, value2)
-      expect(stub_request.response.evaluate).to eq(value1)
-      expect(stub_request.response.evaluate).to eq(value2)
+      expect(stub_request.response.evaluate(request1)).to eq(value1)
+      expect(stub_request.response.evaluate(request1)).to eq(value2)
     end
 
     it 'returns responses in a sequence passed as array with multiple to_return calling' do
       stub_request.to_return(value1, value2)
       stub_request.to_return(value3)
-      expect(stub_request.response.evaluate).to eq(value1)
-      expect(stub_request.response.evaluate).to eq(value2)
-      expect(stub_request.response.evaluate).to eq(value3)
+      expect(stub_request.response.evaluate(request1)).to eq(value1)
+      expect(stub_request.response.evaluate(request1)).to eq(value2)
+      expect(stub_request.response.evaluate(request1)).to eq(value3)
     end
 
     it 'repeats returning last response' do
       stub_request.to_return(value1, value2)
-      expect(stub_request.response.evaluate).to eq(value1)
-      expect(stub_request.response.evaluate).to eq(value2)
-      expect(stub_request.response.evaluate).to eq(value2)
-      expect(stub_request.response.evaluate).to eq(value2)
+      expect(stub_request.response.evaluate(request1)).to eq(value1)
+      expect(stub_request.response.evaluate(request1)).to eq(value2)
+      expect(stub_request.response.evaluate(request1)).to eq(value2)
+      expect(stub_request.response.evaluate(request1)).to eq(value2)
+    end
+
+    it 'repeats running last response' do
+      stub_request.to_return(value1, value2) do |req|
+        case req
+        when request1; value1
+        when request2; value2
+        else; value3
+        end
+      end
+      expect(stub_request.response.evaluate(request2)).to eq(value1)
+      expect(stub_request.response.evaluate(request1)).to eq(value2)
+      expect(stub_request.response.evaluate(request2)).to eq(value2)
+      expect(stub_request.response.evaluate(request1)).to eq(value1)
+      expect(stub_request.response.evaluate(request2)).to eq(value2)
     end
 
     context 'when not calling #to_return' do
