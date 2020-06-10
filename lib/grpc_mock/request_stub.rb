@@ -20,7 +20,7 @@ module GrpcMock
 
     def to_return(*values, &block)
       responses = [*values].flatten.map { |v| Response::Value.new(v) }
-      responses << block if block
+      responses << Response::BlockValue.new(block) if block
       @response_sequence << GrpcMock::ResponsesSequence.new(responses)
       self
     end

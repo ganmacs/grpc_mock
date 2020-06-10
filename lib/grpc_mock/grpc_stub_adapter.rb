@@ -15,7 +15,7 @@ module GrpcMock
 
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
-          mock.call(request)
+          mock.evaluate(request)
         elsif GrpcMock.config.allow_net_connect
           super
         else
@@ -32,7 +32,7 @@ module GrpcMock
         r = requests.to_a       # FIXME: this may not work
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
-          mock.call(r)
+          mock.evaluate(r)
         elsif GrpcMock.config.allow_net_connect
           super
         else
@@ -47,7 +47,7 @@ module GrpcMock
 
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
-          mock.call(request)
+          mock.evaluate(request)
         elsif GrpcMock.config.allow_net_connect
           super
         else
@@ -63,7 +63,7 @@ module GrpcMock
         r = requests.to_a       # FIXME: this may not work
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
-          mock.call(r)
+          mock.evaluate(r)
         elsif GrpcMock.config.allow_net_connect
           super
         else
