@@ -16,7 +16,7 @@ module GrpcMock
                      end
       end
 
-      def evaluate
+      def call(_request)
         raise @exception.dup
       end
     end
@@ -26,7 +26,7 @@ module GrpcMock
         @value = value
       end
 
-      def evaluate
+      def call(_request)
         @value.dup
       end
     end

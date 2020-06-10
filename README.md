@@ -49,6 +49,17 @@ client.hello(Hello::HelloRequest.new(msg: 'hello')) # => send a request to serve
 client client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloResponse.new(msg: 'test') (without any requests to server)
 ```
 
+### Responding dynamically to the stubbed requests
+
+```ruby
+GrpcMock.stub_request("/hello.hello/Hello").to_return do |req|
+  Hello::HelloResponse.new(msg: "#{req.msg} too")
+end
+
+client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
+client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloResponse.new(msg: 'hi too')
+```
+
 ### Real requests to network can be allowed or disabled
 
 ```ruby

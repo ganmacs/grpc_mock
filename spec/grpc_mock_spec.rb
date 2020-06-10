@@ -53,12 +53,40 @@ RSpec.describe GrpcMock do
       it { expect(client.send_message('hello!')).to eq(response) }
     end
 
+    context 'with to_return with block' do
+      let(:response) { Hello::HelloResponse.new(msg: 'test') }
+
+      before do
+        described_class.enable!
+        GrpcMock.stub_request('/hello.hello/Hello').to_return do |request|
+          expect(request.msg).to eq('hello!')
+          response
+        end
+      end
+
+      it { expect(client.send_message('hello!')).to eq(response) }
+    end
+
     context 'with to_raise' do
       let(:exception) { StandardError.new('message') }
 
       before do
         described_class.enable!
         GrpcMock.stub_request('/hello.hello/Hello').to_raise(exception)
+      end
+
+      it { expect { client.send_message('hello!') }.to raise_error(exception.class) }
+    end
+
+    context 'with to_return with raising block' do
+      let(:exception) { StandardError.new('message') }
+
+      before do
+        described_class.enable!
+        GrpcMock.stub_request('/hello.hello/Hello').to_return do |_request|
+          expect(request.msg).to eq('hello!')
+          raise exception
+        end
       end
 
       it { expect { client.send_message('hello!') }.to raise_error(exception.class) }
