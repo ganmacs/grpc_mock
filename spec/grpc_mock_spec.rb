@@ -67,6 +67,21 @@ RSpec.describe GrpcMock do
       it { expect(client.send_message('hello!')).to eq(response) }
     end
 
+    context 'with to_return with metadata' do
+      let(:response) { Hello::HelloResponse.new(msg: 'test') }
+
+      before do
+        described_class.enable!
+        GrpcMock.stub_request('/hello.hello/Hello').to_return do |request, call|
+          expect(request.msg).to eq('hello!')
+          expect(call.metadata).to eq({ 'foo' => 'bar' })
+          response
+        end
+      end
+
+      it { expect(client.send_message('hello!', metadata: { foo: 'bar' })).to eq(response) }
+    end
+
     context 'with to_raise' do
       let(:exception) { StandardError.new('message') }
 

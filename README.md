@@ -52,7 +52,7 @@ client client.hello(Hello::HelloRequest.new(msg: 'hi'))    # => Hello::HelloResp
 ### Responding dynamically to the stubbed requests
 
 ```ruby
-GrpcMock.stub_request("/hello.hello/Hello").to_return do |req|
+GrpcMock.stub_request("/hello.hello/Hello").to_return do |req, call|
   Hello::HelloResponse.new(msg: "#{req.msg} too")
 end
 

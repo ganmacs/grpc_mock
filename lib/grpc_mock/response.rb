@@ -16,7 +16,7 @@ module GrpcMock
                      end
       end
 
-      def evaluate(_request = nil)
+      def evaluate(_request = nil, _call = nil)
         raise @exception.dup
       end
     end
@@ -26,7 +26,7 @@ module GrpcMock
         @value = value
       end
 
-      def evaluate(_request = nil)
+      def evaluate(_request = nil, _call = nil)
         @value.dup
       end
     end
@@ -36,8 +36,13 @@ module GrpcMock
         @block = block
       end
 
-      def evaluate(request)
-        @block.call(request)
+      def evaluate(request, call = nil)
+        if @block.arity == 1
+          # NOTE: just for backwards compatibility
+          @block.call(request)
+        else
+          @block.call(request, call)
+        end
       end
     end
   end
