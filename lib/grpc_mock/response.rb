@@ -37,12 +37,7 @@ module GrpcMock
       end
 
       def evaluate(request, call = nil)
-        if @block.arity == 1
-          # NOTE: just for backwards compatibility
-          @block.call(request)
-        else
-          @block.call(request, call)
-        end
+        @block.call(request, call)
       end
     end
   end
