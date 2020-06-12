@@ -7,7 +7,7 @@ module GrpcMock
     attr_reader :deadline, :metadata
 
     def initialize(metadata: {})
-      @metadata = MockedCall.sanitize_metadata(metadata)
+      @metadata = sanitize_metadata(metadata)
       @deadline = Time.now + 5
     end
 
@@ -19,7 +19,9 @@ module GrpcMock
       GRPC::ActiveCall::SingleReqView.new(self)
     end
 
-    def self.sanitize_metadata(metadata)
+    private
+
+    def sanitize_metadata(metadata)
       raise TypeError, "got <#{metadata.class}>, want <Hash>" unless metadata.is_a?(Hash)
 
       headers = []

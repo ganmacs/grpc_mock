@@ -8,10 +8,14 @@ RSpec.describe GrpcMock::MockedCall do
     end
   end
 
-  describe ".sanitize_metadata" do
+  describe "#sanitize_metadata" do
+    def sanitize_metadata(metadata)
+      GrpcMock::MockedCall.new(metadata: metadata).metadata
+    end
+
     it "rejects non-Hash argument" do
       expect {
-        GrpcMock::MockedCall.sanitize_metadata([1, 2, 3])
+        sanitize_metadata([1, 2, 3])
       }.to raise_error(TypeError)
     end
 
@@ -20,7 +24,7 @@ RSpec.describe GrpcMock::MockedCall do
         :foo => 'bar',
         'hoge' => 'piyo',
       }
-      metadata = GrpcMock::MockedCall.sanitize_metadata(metadata)
+      metadata = sanitize_metadata(metadata)
       expect(metadata).to eq({
                                'foo' => 'bar',
                                'hoge' => 'piyo',
@@ -33,7 +37,7 @@ RSpec.describe GrpcMock::MockedCall do
         'content-type' => 'application/protobuf',
         :'f.o_o' => 'bar',
       }
-      metadata = GrpcMock::MockedCall.sanitize_metadata(metadata)
+      metadata = sanitize_metadata(metadata)
       expect(metadata).to eq({
                                'user-agent' => 'Mozilla',
                                'content-type' => 'application/protobuf',
@@ -43,17 +47,17 @@ RSpec.describe GrpcMock::MockedCall do
 
     it "rejects non-String non-Symbol keys" do
       expect {
-        GrpcMock::MockedCall.sanitize_metadata({ 1 => 'bar' })
+        sanitize_metadata({ 1 => 'bar' })
       }.to raise_error(TypeError)
     end
 
     it "rejects invalid key format" do
       expect {
-        GrpcMock::MockedCall.sanitize_metadata({ "foo+" => 'bar' })
+        sanitize_metadata({ "foo+" => 'bar' })
       }.to raise_error(ArgumentError)
 
       expect {
-        GrpcMock::MockedCall.sanitize_metadata({ :"foo+" => 'bar' })
+        sanitize_metadata({ :"foo+" => 'bar' })
       }.to raise_error(ArgumentError)
     end
 
@@ -64,7 +68,7 @@ RSpec.describe GrpcMock::MockedCall do
         'array-zero' => [],
         'array-multiple' => ['foo', 'bar'],
       }
-      metadata = GrpcMock::MockedCall.sanitize_metadata(metadata)
+      metadata = sanitize_metadata(metadata)
       expect(metadata).to eq({
                                'string' => 'foo',
                                'array' => 'foo',
@@ -74,13 +78,13 @@ RSpec.describe GrpcMock::MockedCall do
 
     it "rejects non-String non-Array values" do
       expect {
-        GrpcMock::MockedCall.sanitize_metadata({ 'frob' => :something })
+        sanitize_metadata({ 'frob' => :something })
       }.to raise_error(ArgumentError)
     end
 
     it "rejects non-String elements" do
       expect {
-        GrpcMock::MockedCall.sanitize_metadata({ 'foo' => [['bar']] })
+        sanitize_metadata({ 'foo' => [['bar']] })
       }.to raise_error(TypeError)
     end
 
@@ -88,7 +92,7 @@ RSpec.describe GrpcMock::MockedCall do
       metadata = {
         'string' => "x&(y^z) +: !~`'\"\\",
       }
-      metadata = GrpcMock::MockedCall.sanitize_metadata(metadata)
+      metadata = sanitize_metadata(metadata)
       expect(metadata).to eq({
                                'string' => "x&(y^z) +: !~`'\"\\",
                              })
@@ -98,7 +102,7 @@ RSpec.describe GrpcMock::MockedCall do
       metadata = {
         'string-bin' => "a\x87b\xA0c\t\n",
       }
-      metadata = GrpcMock::MockedCall.sanitize_metadata(metadata)
+      metadata = sanitize_metadata(metadata)
       expect(metadata).to eq({
                                'string-bin' => "a\x87b\xA0c\t\n",
                              })
@@ -106,7 +110,7 @@ RSpec.describe GrpcMock::MockedCall do
 
     it "rejects non-ascii values" do
       expect {
-        GrpcMock::MockedCall.sanitize_metadata({ 'string' => "foo\n" })
+        sanitize_metadata({ 'string' => "foo\n" })
       }.to raise_error(ArgumentError)
     end
   end
