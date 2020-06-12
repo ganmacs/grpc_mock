@@ -6,9 +6,9 @@ module GrpcMock
   class MockedCall
     attr_reader :deadline, :metadata
 
-    def initialize(metadata: {})
+    def initialize(metadata: {}, deadline: nil)
       @metadata = sanitize_metadata(metadata)
-      @deadline = Time.now + 5
+      @deadline = deadline
     end
 
     def multi_req_view
