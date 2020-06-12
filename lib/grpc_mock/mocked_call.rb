@@ -29,7 +29,7 @@ module GrpcMock
         raise TypeError, "bad type for key parameter" unless key.is_a?(String) || key.is_a?(Symbol)
 
         key = key.to_s
-        raise ArgumentError, "'#{key}' is an invalid header key" unless key.match?(/\A[a-z0-9-_.]+\z/i)
+        raise ArgumentError, "'#{key}' is an invalid header key" unless key.match?(/\A[a-z0-9-_.]+\z/) && key != ''
         raise ArgumentError, "Header values must be of type string or array" unless value.is_a?(String) || value.is_a?(Array)
 
         Array(value).each do |elem|

@@ -51,6 +51,18 @@ RSpec.describe GrpcMock::MockedCall do
       }.to raise_error(TypeError)
     end
 
+    it "rejects empty key" do
+      expect {
+        sanitize_metadata({ "" => 'bar' })
+      }.to raise_error(ArgumentError)
+    end
+
+    it "rejects capital key name" do
+      expect {
+        sanitize_metadata({ "FOO" => 'bar' })
+      }.to raise_error(ArgumentError)
+    end
+
     it "rejects invalid key format" do
       expect {
         sanitize_metadata({ "foo+" => 'bar' })
