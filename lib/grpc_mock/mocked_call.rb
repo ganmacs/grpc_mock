@@ -36,7 +36,7 @@ module GrpcMock
 
         key = key.to_s
         # https://github.com/grpc/grpc/blob/v1.29.1/src/core/lib/surface/validate_metadata.cc#L61-L79
-        raise ArgumentError, "'#{key}' is an invalid header key" unless key.match?(/\A[a-z0-9-_.]+\z/) && key != ''
+        raise ArgumentError, "'#{key}' is an invalid header key" unless key.match?(/\A[a-z0-9\-_.]+\z/) && key != ''
         raise ArgumentError, "Header values must be of type string or array" unless value.is_a?(String) || value.is_a?(Array)
 
         Array(value).each do |elem|
