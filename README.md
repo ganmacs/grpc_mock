@@ -28,7 +28,7 @@ require 'grpc_mock/rspec'
 
 ## Examples
 
-See definition of protocol buffers and gRPC generated code in [spec/exmaples/hello](https://github.com/ganmacs/grpc_mock/tree/master/spec/examples/hello)
+See definition of protocol buffers and gRPC generated code in [spec/examples/hello](https://github.com/ganmacs/grpc_mock/tree/master/spec/examples/hello)
 
 ### Stubbed request based on path and with the default response
 
