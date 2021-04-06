@@ -24,7 +24,7 @@ RSpec.describe GrpcMock do
 
     it { expect { client.send_message('hello!') } .to raise_error(GrpcMock::NetConnectNotAllowedError) }
 
-    context 'to GrpcMock.diable!' do
+    context 'to GrpcMock.disable!' do
       before do
         described_class.disable!
       end
