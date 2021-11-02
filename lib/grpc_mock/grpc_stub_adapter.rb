@@ -5,7 +5,7 @@ require 'grpc_mock/errors'
 require 'grpc_mock/mocked_call'
 
 module GrpcMock
-  MockedOperation = Struct.new(:execute)
+  MockedOperation = Struct.new(:call, :metadata, :execute)
 
   class GrpcStubAdapter
     # To make hook point for GRPC::ClientStub
@@ -20,7 +20,7 @@ module GrpcMock
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
           response = mock.evaluate(request, call.single_req_view)
-          return GrpcMock::MockedOperation.new(response) if return_op
+          return GRPC::MockedOperation.new(call, metadata, response) if return_op
           response
         elsif GrpcMock.config.allow_net_connect
           super
@@ -40,7 +40,7 @@ module GrpcMock
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
           response = mock.evaluate(r, call.multi_req_view)
-          return GrpcMock::MockedOperation.new(response) if return_op
+          return GrpcMock::MockedOperation.new(call, metadata, response) if return_op
           response
         elsif GrpcMock.config.allow_net_connect
           super
@@ -58,7 +58,7 @@ module GrpcMock
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
           response = mock.evaluate(request, call.single_req_view)
-          return GrpcMock::MockedOperation.new(response) if return_op
+          return GrpcMock::MockedOperation.new(call, metadata, response) if return_op
           response
         elsif GrpcMock.config.allow_net_connect
           super
@@ -76,7 +76,7 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
           response = mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
-          return GrpcMock::MockedOperation.new(response) if return_op
+          return GrpcMock::MockedOperation.new(call, metadata, response) if return_op
           response
         elsif GrpcMock.config.allow_net_connect
           super
