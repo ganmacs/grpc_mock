@@ -126,4 +126,31 @@ RSpec.describe GrpcMock::MockedCall do
       }.to raise_error(ArgumentError)
     end
   end
+
+  describe "#operation" do
+    let(:metadata) { { 'foo' => 'bar' } }
+    let(:deadline) { Time.now }
+    let(:mocked_call) { described_class.new(metadata: metadata, deadline: deadline) }
+    subject { mocked_call.operation }
+
+    it { is_expected.to be_a(GrpcMock::MockedOperation) }
+
+    describe "metadata" do
+      subject { mocked_call.operation.metadata }
+
+      it { is_expected.to eq(metadata) }
+    end
+
+    describe "call" do
+      subject { mocked_call.operation.call }
+
+      it { is_expected.to eq(mocked_call) }
+    end
+
+    describe "deadline" do
+      subject { mocked_call.operation.deadline }
+
+      it { is_expected.to eq(deadline) }
+    end
+  end
 end

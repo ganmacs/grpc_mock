@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'grpc'
+require 'grpc_mock/mocked_operation'
 
 module GrpcMock
   class MockedCall
@@ -17,6 +18,10 @@ module GrpcMock
 
     def single_req_view
       GRPC::ActiveCall::SingleReqView.new(self)
+    end
+
+    def operation
+      GrpcMock::MockedOperation.new(self, metadata, deadline)
     end
 
     private
