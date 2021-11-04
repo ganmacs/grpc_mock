@@ -9,7 +9,7 @@ module GrpcMock
     # To make hook point for GRPC::ClientStub
     # https://github.com/grpc/grpc/blob/bec3b5ada2c5e5d782dff0b7b5018df646b65cb0/src/ruby/lib/grpc/generic/service.rb#L150-L186
     module Adapter
-      def request_response(method, request, *args, metadata: {}, **kwargs)
+      def request_response(method, request, *args, metadata: {}, return_op: false, **kwargs)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
@@ -17,7 +17,15 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
-          mock.evaluate(request, call.single_req_view)
+          if return_op
+            operation = call.operation
+            operation.define_singleton_method(:execute) do
+              mock.evaluate(request, call.single_req_view)
+            end
+            operation
+          else
+            mock.evaluate(request, call.single_req_view)
+          end
         elsif GrpcMock.config.allow_net_connect
           super
         else
@@ -26,7 +34,7 @@ module GrpcMock
       end
 
       # TODO
-      def client_streamer(method, requests, *args, metadata: {}, **kwargs)
+      def client_streamer(method, requests, *args, metadata: {}, return_op: false, **kwargs)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
@@ -35,7 +43,15 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
-          mock.evaluate(r, call.multi_req_view)
+          if return_op
+            operation = call.operation
+            operation.define_singleton_method(:execute) do
+              mock.evaluate(r, call.multi_req_view)
+            end
+            operation
+          else
+            mock.evaluate(r, call.multi_req_view)
+          end
         elsif GrpcMock.config.allow_net_connect
           super
         else
@@ -43,15 +59,22 @@ module GrpcMock
         end
       end
 
-      def server_streamer(method, request, *args, metadata: {}, **kwargs)
+      def server_streamer(method, request, *args, metadata: {}, return_op: false, **kwargs)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
 
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
-          call = GrpcMock::MockedCall.new(metadata: metadata)
-          mock.evaluate(request, call.single_req_view)
+          if return_op
+            operation = call.operation
+            operation.define_singleton_method(:execute) do
+              mock.evaluate(request, call.single_req_view)
+            end
+            operation
+          else
+            mock.evaluate(request, call.single_req_view)
+          end
         elsif GrpcMock.config.allow_net_connect
           super
         else
@@ -59,7 +82,7 @@ module GrpcMock
         end
       end
 
-      def bidi_streamer(method, requests, *args, metadata: {}, **kwargs)
+      def bidi_streamer(method, requests, *args, metadata: {}, return_op: false, **kwargs)
         unless GrpcMock::GrpcStubAdapter.enabled?
           return super
         end
@@ -67,7 +90,15 @@ module GrpcMock
         r = requests.to_a       # FIXME: this may not work
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
-          mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
+          if return_op
+            operation = call.operation
+            operation.define_singleton_method(:execute) do
+              mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
+            end
+            operation
+          else
+            mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
+          end
         elsif GrpcMock.config.allow_net_connect
           super
         else
