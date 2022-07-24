@@ -66,6 +66,7 @@ module GrpcMock
 
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
+          call = GrpcMock::MockedCall.new(metadata: metadata)
           if return_op
             operation = call.operation
             operation.define_singleton_method(:execute) do
