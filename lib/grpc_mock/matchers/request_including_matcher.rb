@@ -32,7 +32,7 @@ module GrpcMock
       end
 
       def inspect
-        "reqeust_including(#{@expected.inspect})"
+        "request_including(#{@expected.inspect})"
       end
     end
   end
