@@ -1,4 +1,4 @@
-# GrpcMock [![Build Status](https://travis-ci.org/ganmacs/grpc_mock.svg?branch=master)](https://travis-ci.org/ganmacs/grpc_mock)
+# GrpcMock [![Build Status](https://github.com/ganmacs/grpc_mock/actions/workflows/ci.yml/badge.svg)](https://github.com/ganmacs/grpc_mock/actions/workflows/ci.yml)
 
 Library for stubbing grpc in Ruby.
 
