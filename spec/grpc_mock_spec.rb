@@ -155,6 +155,11 @@ RSpec.describe GrpcMock do
       end
 
       it { expect(client.send_message('hello2!')).to eq(response) }
+
+      it 'triggers incerceptors' do
+        expect_any_instance_of(HelloInterceptor).to receive(:notify).with(any_args).and_call_original
+        client.send_message('hello2!')
+      end
     end
 
     context 'more complex example' do

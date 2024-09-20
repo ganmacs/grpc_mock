@@ -2,22 +2,22 @@
 # Source: request.proto for package 'request'
 
 require 'grpc'
-require 'examples/request/request_pb'
+require 'request_pb'
 
 module Request
   module Request
     class Service
 
-      include GRPC::GenericService
+      include ::GRPC::GenericService
 
       self.marshal_class_method = :encode
       self.unmarshal_class_method = :decode
       self.service_name = 'request.request'
 
-      rpc :Hello, HelloRequest, HelloResponse
-      rpc :HelloServerStream, HelloRequest, stream(HelloStreamResponse)
-      rpc :HelloClientStream, stream(HelloStreamRequest), HelloResponse
-      rpc :HelloStream, stream(HelloStreamRequest), stream(HelloStreamResponse)
+      rpc :Hello, ::Request::HelloRequest, ::Request::HelloResponse
+      rpc :HelloServerStream, ::Request::HelloRequest, stream(::Request::HelloStreamResponse)
+      rpc :HelloClientStream, stream(::Request::HelloStreamRequest), ::Request::HelloResponse
+      rpc :HelloStream, stream(::Request::HelloStreamRequest), stream(::Request::HelloStreamResponse)
     end
 
     Stub = Service.rpc_stub_class

@@ -1,8 +1,9 @@
 require_relative './hello_services_pb'
+require_relative './hello_interceptor'
 
 class HelloClient
   def initialize
-    @client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure)
+    @client = Hello::Hello::Stub.new('localhost:8000', :this_channel_is_insecure, interceptors: [HelloInterceptor.new])
   end
 
   def send_message(msg, client_stream: false, server_stream: false, metadata: {})

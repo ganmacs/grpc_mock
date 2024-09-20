@@ -24,6 +24,23 @@ module GrpcMock
       GrpcMock::MockedOperation.new(self, metadata, deadline)
     end
 
+    def interceptable
+      InterceptableView.new(self)
+    end
+
+    def self.view_class(*visible_methods)
+      Class.new do
+        extend ::Forwardable
+        def_delegators :@wrapped, *visible_methods
+
+        def initialize(wrapped)
+          @wrapped = wrapped
+        end
+      end
+    end
+
+    InterceptableView = view_class(:deadline)
+
     private
 
     def sanitize_metadata(metadata)

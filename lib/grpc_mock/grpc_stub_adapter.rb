@@ -17,14 +17,21 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
+
+          interception_context, intercept_args = interceptor_context_and_args(method, request, call, metadata: metadata)
+
           if return_op
             operation = call.operation
             operation.define_singleton_method(:execute) do
-              mock.evaluate(request, call.single_req_view)
+              interception_context.intercept!(:request_response, intercept_args) do
+                mock.evaluate(request, call.single_req_view)
+              end
             end
             operation
           else
-            mock.evaluate(request, call.single_req_view)
+            interception_context.intercept!(:request_response, intercept_args) do
+              mock.evaluate(request, call.single_req_view)
+            end
           end
         elsif GrpcMock.config.allow_net_connect
           super
@@ -43,14 +50,21 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
+
+          interception_context, intercept_args = interceptor_context_and_args(method, requests, call, metadata: metadata)
+
           if return_op
             operation = call.operation
             operation.define_singleton_method(:execute) do
-              mock.evaluate(r, call.multi_req_view)
+              interception_context.intercept!(:client_streamer, intercept_args) do
+                mock.evaluate(r, call.multi_req_view)
+              end
             end
             operation
           else
-            mock.evaluate(r, call.multi_req_view)
+            interception_context.intercept!(:client_streamer, intercept_args) do
+              mock.evaluate(r, call.multi_req_view)
+            end
           end
         elsif GrpcMock.config.allow_net_connect
           super
@@ -67,14 +81,21 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
+
+          interception_context, intercept_args = interceptor_context_and_args(method, request, call, metadata: metadata)
+
           if return_op
             operation = call.operation
             operation.define_singleton_method(:execute) do
-              mock.evaluate(request, call.single_req_view)
+              interception_context.intercept!(:server_streamer, intercept_args) do
+                mock.evaluate(request, call.single_req_view)
+              end
             end
             operation
           else
-            mock.evaluate(request, call.single_req_view)
+            interception_context.intercept!(:server_streamer, intercept_args) do
+              mock.evaluate(request, call.single_req_view)
+            end
           end
         elsif GrpcMock.config.allow_net_connect
           super
@@ -91,20 +112,44 @@ module GrpcMock
         r = requests.to_a       # FIXME: this may not work
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
+
+          interception_context, intercept_args = interceptor_context_and_args(method, requests, call, metadata: metadata)
+
           if return_op
             operation = call.operation
             operation.define_singleton_method(:execute) do
-              mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
+              interception_context.intercept!(:bidi_streamer, intercept_args) do
+                mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
+              end
             end
             operation
           else
-            mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
+            interception_context.intercept!(:bidi_streamer, intercept_args) do
+              mock.evaluate(r, nil) # FIXME: provide BidiCall equivalent
+            end
           end
         elsif GrpcMock.config.allow_net_connect
           super
         else
           raise NetConnectNotAllowedError, method
         end
+      end
+
+      def interceptor_context_and_args(method, request_or_requests, call, metadata: {})
+        interception_context = @interceptors.build_context
+        intercept_args = {
+          method: method,
+          call: call.interceptable,
+          metadata: metadata
+        }
+
+        if request_or_requests.is_a?(Enumerable)
+          intercept_args[:requests] = request_or_requests
+        else
+          intercept_args[:request] = request_or_requests
+        end
+
+        [interception_context, intercept_args]
       end
     end
 
