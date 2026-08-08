@@ -170,7 +170,7 @@ RSpec.describe GrpcMock do
         Request::HelloRequest.new(
           msg: 'hello2!',
           n: 10,
-          ptype: Request::PhoneType::MOBILE,
+          ptype: Request::PhoneType::HOME,
           inner: Request::InnerRequest.new(
             msg: 'hello!',
             n: 11,
@@ -185,7 +185,7 @@ RSpec.describe GrpcMock do
       end
 
       it 'returns mock object' do
-        h = { msg: 'hello2!', ptype: Request::PhoneType.lookup(Request::PhoneType::MOBILE), inner: { msg: 'hello!' } }
+        h = { msg: 'hello2!', ptype: Request::PhoneType.lookup(Request::PhoneType::HOME), inner: { msg: 'hello!' } }
         GrpcMock.stub_request('/request.request/Hello').with(GrpcMock.request_including(h)).to_return(response)
         expect(client.hello(request)).to eq(response)
       end
