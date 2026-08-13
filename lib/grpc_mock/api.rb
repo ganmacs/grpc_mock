@@ -15,8 +15,10 @@ module GrpcMock
       GrpcMock::Matchers::RequestIncludingMatcher.new(values)
     end
 
-    def disable_net_connect!
+    def disable_net_connect!(allow_localhost: false, allow: nil)
       GrpcMock.config.allow_net_connect = false
+      GrpcMock.config.allow_localhost = allow_localhost
+      GrpcMock.config.allow = allow
     end
 
     def allow_net_connect!
